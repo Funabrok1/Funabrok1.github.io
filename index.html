@@ -478,6 +478,10 @@
                 manageModalView('clarification');
             }
 
+            function isMobile() {
+                return /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            }
+
             async function downloadReportAsPDF() {
                 const { jsPDF } = window.jspdf;
                 const reportElement = document.getElementById('reportContent');
@@ -485,39 +489,37 @@
                 downloadButton.innerText = 'Generando...';
                 downloadButton.disabled = true;
 
-                const printWindow = window.open('', '_blank');
-                
                 let stylesHtml = '';
                 Array.from(document.styleSheets).forEach(styleSheet => {
                     if (styleSheet.href) {
                         stylesHtml += `<link rel="stylesheet" href="${styleSheet.href}">`;
                     } else {
                         try {
-                           stylesHtml += `<style>${Array.from(styleSheet.cssRules).map(rule => rule.cssText).join('\n')}</style>`;
+                            stylesHtml += `<style>${Array.from(styleSheet.cssRules).map(rule => rule.cssText).join('\n')}</style>`;
                         } catch (e) {
-                           console.warn("Could not read cross-origin stylesheet. PDF styling might be incomplete.", e);
+                            // Puede fallar por CORS, no pasa nada
                         }
                     }
                 });
-                
+
                 const pdfSpecificStyles = `
                     <style>
                         body { 
                             background: #fff !important; 
                             color: #222 !important;
                             font-family: 'Montserrat', sans-serif !important;
-                            font-size: 26px !important;
-                            line-height: 2.5;
+                            font-size: 22px !important;
+                            line-height: 1.6;
                         }
-                            #diagnosisSummaryOutput,
-                            #diagnosisSummaryOutput *,
-                            .prose,
-                            .prose *,
-                            table,
-                            table *,
-                            th, td, tr, thead, tbody {
-                                font-size: 22px !important;
-                                line-height: 1.6 !important;
+                        #diagnosisSummaryOutput,
+                        #diagnosisSummaryOutput *,
+                        .prose,
+                        .prose *,
+                        table,
+                        table *,
+                        th, td, tr, thead, tbody {
+                            font-size: 22px !important;
+                            line-height: 1.6 !important;
                         }
                         h1 { font-size: 2.5em !important; font-weight: bold !important; }
                         h2 { font-size: 2em !important; font-weight: bold !important; }
@@ -548,18 +550,21 @@
                             </div>
                         </body>
                     </html>`;
-                
-                printWindow.document.open();
-                printWindow.document.write(fullHtml);
-                
-                printWindow.onload = () => {
+
+                if (isMobile()) {
+                    // Móvil: descarga directa, sin abrir ventana nueva
+                    let tempDiv = document.createElement('div');
+                    tempDiv.style.position = 'fixed';
+                    tempDiv.style.left = '-9999px';
+                    tempDiv.innerHTML = fullHtml;
+                    document.body.appendChild(tempDiv);
+
                     setTimeout(async () => {
                         try {
-                            const canvas = await html2canvas(printWindow.document.body, {
-                                scale: 0.8,
+                            const canvas = await html2canvas(tempDiv, {
+                                scale: 1,
                                 useCORS: true,
                             });
-
                             const imgData = canvas.toDataURL('image/png');
                             const imgWidth = canvas.width;
                             const imgHeight = canvas.height;
@@ -574,21 +579,55 @@
 
                             pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
                             pdf.save('reporte-diagnostico-empresarial.pdf');
-                            
-                            downloadPrompt.classList.add('hidden');
-                            mondayFormContainer.classList.remove('hidden');
-
+                            // Mensaje de éxito en móvil
+                            alert('¡El PDF se ha generado y descargado correctamente!');
                         } catch (error) {
-                            console.error("Error al generar PDF:", error);
-                            alert("Ocurrió un error al generar el PDF.");
+                            alert("Ocurrió un error al generar el PDF en móvil.");
                         } finally {
-                            printWindow.close();
+                            document.body.removeChild(tempDiv);
                             downloadButton.innerText = 'Descargar PDF';
                             downloadButton.disabled = false;
                         }
-                    }, 2000); 
-                };
-                printWindow.document.close();
+                    }, 100);
+                } else {
+                    // Escritorio: flujo normal, abre ventana nueva
+                    const printWindow = window.open('', '_blank');
+                    printWindow.document.open();
+                    printWindow.document.write(fullHtml);
+
+                    printWindow.onload = () => {
+                        setTimeout(async () => {
+                            try {
+                                const canvas = await html2canvas(printWindow.document.body, {
+                                    scale: 2,
+                                    useCORS: true,
+                                });
+
+                                const imgData = canvas.toDataURL('image/png');
+                                const imgWidth = canvas.width;
+                                const imgHeight = canvas.height;
+                                const pdfWidth = 210; // A4 width in mm
+                                const pdfHeight = (imgHeight * pdfWidth) / imgWidth;
+
+                                const pdf = new jsPDF({
+                                    orientation: 'p',
+                                    unit: 'mm',
+                                    format: [pdfWidth, pdfHeight]
+                                });
+
+                                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                                pdf.save('reporte-diagnostico-empresarial.pdf');
+                            } catch (error) {
+                                alert("Ocurrió un error al generar el PDF.");
+                            } finally {
+                                printWindow.close();
+                                downloadButton.innerText = 'Descargar PDF';
+                                downloadButton.disabled = false;
+                            }
+                        }, 2000);
+                    };
+                    printWindow.document.close();
+                }
             }
 
             form.addEventListener('submit', async (e) => {
