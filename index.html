@@ -298,41 +298,123 @@
             const fieldLabels = { 'nombre_empresa': 'Nombre de la Empresa', 'sector': 'Sector', 'descripcion_negocio': 'Descripción del Negocio', 'puesto_usuario': 'Rol o posición actual', 'antiguedad_empresa': 'Antigüedad de la empresa', 'numero_empleados': 'Número de empleados', 'mayor_reto_superado': 'Mayor reto superado', 'hito_mas_importante': 'Mayor aprendizaje o hito', 'nombre_contacto': 'Nombre de Contacto', 'email_contacto': 'Email de Contacto', 'telefono_contacto': 'Teléfono de Contacto', 'tipo_sociedad': 'Tipo de Sociedad', 'nivel_formalidad_corporativa': 'Nivel de formalidad', 'existencia_contratos': 'Existencia de contratos claros', 'propiedad_intelectual_registrada': 'Registro de patentes o marcas', 'gestion_compliance': 'Gestión de cumplimiento normativo', 'protocolos_gobierno': 'Protocolos de gobierno corporativo', 'plan_sucesion_definido': 'Plan de sucesión definido', 'nivel_cumplimiento_fiscal': 'Nivel de cumplimiento fiscal', 'asesoria_legal_permanente': 'Asesoría legal y fiscal permanente', 'giro_principal': 'Giro principal del negocio', 'posicionamiento_mercado': 'Posicionamiento frente a competencia', 'estrategias_marketing': 'Estrategias de marketing', 'tipo_empresa': 'Tipo de empresa', 'numero_socios': 'Número de socios', 'acuerdos_entre_socios': 'Acuerdos formales entre socios', 'separacion_patrimonio': 'Separación de patrimonio', 'seguro_responsabilidad': 'Seguro de responsabilidad civil', 'estructura_holding': 'Estructuras de holding', 'impacto_ausencia_persona_clave': 'Impacto por ausencia de persona clave', 'lista_personas_clave': 'Personas indispensable para la operación', 'costo_estimado_perdida_clave': 'Costo financiero estimado por ausencia', 'plan_contingencia_existente': 'Plan de sucesión o fondo de contingencia', 'tipo_prestaciones_empleados': 'Prestaciones a empleados', 'gestion_rotacion_personal': 'Gestión de rotación de talento', 'seguro_personas_clave': 'Seguro de personas clave', 'preocupaciones_continuidad': 'Preocupaciones sobre continuidad', 'situacion_utilidad_fiscal': 'Situación de la utilidad fiscal', 'gestion_flujo_efectivo': 'Desafíos en flujo de efectivo', 'conocimiento_coeficiente_utilidad': 'Conocimiento del coeficiente de utilidad', 'uso_principal_utilidades': 'Uso principal de las utilidades', 'metodo_pago_directivos': 'Método de compensación a directivos/socios', 'estrategias_fiscales_actuales': 'Estrategia actual para reducir carga de ISR o PTU', 'proyectos_futuros_empresa': 'Proyectos importantes para los próximos 3-5 años', 'metodo_fondeo_proyectos': 'Método de fondeo para proyectos', 'reservas_empresariales': 'Existencia de fondos o reservas empresariales' };
 
             function generateGeminiPrompt(data) {
-                let instructions = `Eres un consultor experto en negocios, estrategias de marketing, gobierno corporativo, fiscalidad, impuestos y diseño de estrategias de seguros utilizando herramientas como pólizas de hombre clave y seguros de gastos médicos colectivos. A partir de un diagnóstico que te compartiré, quiero que realices un análisis integral y una recomendación personalizada que incluya las siguientes secciones:\n\n1. Diagnóstico interpretado (resumen ejecutivo con lenguaje técnico accesible).\n2. Identificación de oportunidades estratégicas en las áreas de:\n   - Modelo de negocio\n   - Estrategia de marketing\n   - Gobierno corporativo\n   - Planificación fiscal e impositiva\n   - Estrategia de seguros (hombre clave / GMC)\n3. Plan de acción priorizado en etapas (corto, mediano y largo plazo).\n4. Recomendaciones específicas para implementar cada propuesta estratégica.\n5. Riesgos y mitigaciones asociados a cada estrategia.\n\nAntes de responder, piensa paso a paso cómo se interrelacionan las áreas y cómo pueden fortalecerse mutuamente. Usa un lenguaje profesional, con términos de negocios y enfoque consultivo. No hagas suposiciones sin sustento en el diagnóstico que te voy a proporcionar. Si necesitas más información, haz preguntas específicas antes de emitir recomendaciones.`;
-                let conditionalInstructions = "\n\n--- REGLAS DE NEGOCIO ADICIONALES ---\n";
-                let hasConditions = false;
-                if (data.numero_empleados && parseInt(data.numero_empleados) < 10) {
-                    conditionalInstructions += "- El cliente tiene menos de 10 empleados, por lo tanto, NO menciones ni recomiendes un seguro de Gastos Médicos Mayores Colectivo (GMC).\n";
-                    hasConditions = true;
-                }
-                const antiguedad = data.antiguedad_empresa || "";
-                const mesesMatch = antiguedad.match(/(\d+)\s*mes/i);
-                const anosMatch = antiguedad.match(/(\d+)\s*a.o/i);
-                let mesesTotales = Infinity;
-                if (mesesMatch) {
-                    mesesTotales = parseInt(mesesMatch[1]);
-                } else if (anosMatch) {
-                    mesesTotales = parseInt(anosMatch[1]) * 12;
-                }
-                if (mesesTotales < 15) {
-                    conditionalInstructions += "- La empresa tiene menos de 15 meses de operación. NO recomiendes un seguro de Hombre Clave, ya que no es elegible.\n";
-                    hasConditions = true;
-                }
-                if (data.tipo_prestaciones_empleados && (data.tipo_prestaciones_empleados.toLowerCase().includes('colectiva') || data.tipo_prestaciones_empleados.toLowerCase().includes('sgmm'))) {
-                    conditionalInstructions += "- El cliente ya cuenta con una póliza de Gastos Médicos Mayores Colectiva. En lugar de proponer una nueva, sugiere la posibilidad de revisar la actual para encontrar áreas de oportunidad y optimización.\n";
-                    hasConditions = true;
-                }
-                if (hasConditions) {
-                    instructions += conditionalInstructions;
-                }
-                instructions += `\n\n---DATOS_ESTRUCTURADOS---\nAl final de TODA tu respuesta, añade un bloque JSON que contenga únicamente los conceptos clave del plan de acción. El JSON debe tener el siguiente formato: \`\`\`json\n{"timelineData": {"corto_plazo": ["Concepto 1", "Concepto 2"], "mediano_plazo": ["Concepto 3"], "largo_plazo": ["Concepto 4"]}}\n\`\`\`\n\n--- DIAGNÓSTICO EMPRESARIAL RECOPILADO ---`;
-                let diagnosisData = "\n";
-                for (const key in fieldLabels) {
-                    if (data[key]) {
-                        diagnosisData += `- **${fieldLabels[key]}:** ${data[key]}\n`;
-                    }
-                }
-                return `${instructions}${diagnosisData}`;
+                let prompt = `Eres un consultor empresarial senior con MBA y especialización en:
+- Estrategia corporativa
+- Planeación fiscal avanzada (anticipo de rendimientos, renta vitalicia, beneficios sindicales)
+- Blindaje patrimonial y continuidad de negocio (seguros de hombre clave, intersocios)
+- Estrategia de marketing y posicionamiento
+- Gobierno corporativo, compliance y escalabilidad empresarial
+
+Tu tarea es analizar la siguiente información proporcionada por un empresario a través de su diagnóstico. El análisis debe estar organizado en 6 bloques claros y accionables:
+
+---
+
+## 📊 1) Diagnóstico General
+Resume en lenguaje técnico, pero entendible para un directivo, cómo percibes la situación actual de la empresa. Destaca factores como:
+- Estructura legal y gobierno corporativo
+- Nivel de formalidad y cumplimiento fiscal
+- Protección de socios y continuidad de negocio
+- Situación de flujo de efectivo y uso de utilidades
+- Estado de blindaje patrimonial y liquidez estratégica
+
+---
+
+## 🚀 2) Riesgos y Áreas Vulnerables
+Enumera los principales riesgos que podrían impactar:
+- Operación
+- Continuidad del negocio
+- Sostenibilidad financiera
+- Eficiencia fiscal
+
+---
+
+## 💡 3) Oportunidades Estratégicas
+Identifica oportunidades de mejora en:
+- Estructura legal y protocolos de socios
+- Blindaje patrimonial (seguros clave, fondos de contingencia, separación patrimonial)
+- Eficiencia fiscal (uso de figuras como renta vitalicia, anticipos a rendimientos, esquemas sindicales)
+- Estrategia de retención de talento y beneficios para empleados
+- Marketing y posicionamiento en su nicho
+
+---
+
+## 🧭 4) Plan de Acción Priorizado
+Propón un roadmap organizado por etapas:
+- Corto Plazo (0-6 meses)
+- Mediano Plazo (6-18 meses)
+- Largo Plazo (18-36 meses)
+
+Enlista en cada etapa acciones específicas y su impacto esperado.
+
+---
+
+## 📝 5) Recomendaciones Específicas
+Para cada oportunidad detectada, explica:
+- Qué estrategia aplicar
+- Cómo implementarla (figuras legales, tipos de seguros, contratos)
+- Beneficio financiero y patrimonial esperado
+- Fundamento legal o fiscal si aplica
+
+---
+
+## ⚠️ 6) Condicionantes y Precauciones
+Si detectas alguna restricción, como número de empleados bajo, antigüedad de la empresa menor a 12 meses, ausencia de socios, etc., aclara qué estrategias **NO** aplicarías aún y qué condiciones se deben cumplir para implementarlas después.
+
+---
+
+## 📌 **Input: Diagnóstico Real**
+
+Usa la siguiente información estructurada para tu análisis:
+
+[NOMBRE EMPRESA]: ${data.nombre_empresa || ''}
+[SECTOR]: ${data.sector || ''}
+[DESCRIPCIÓN]: ${data.descripcion_negocio || ''}
+[ANTIGÜEDAD]: ${data.antiguedad_empresa || ''}
+[ROL USUARIO]: ${data.puesto_usuario || ''}
+[NÚMERO EMPLEADOS]: ${data.numero_empleados || ''}
+[TIPO SOCIEDAD]: ${data.tipo_sociedad || ''}
+[NIVEL FORMALIDAD]: ${data.nivel_formalidad_corporativa || ''}
+[EXISTENCIA CONTRATOS]: ${data.existencia_contratos || ''}
+[PROPIEDAD INTELECTUAL]: ${data.propiedad_intelectual_registrada || ''}
+[GESTIÓN COMPLIANCE]: ${data.gestion_compliance || ''}
+[PROTOCOLOS GOBIERNO]: ${data.protocolos_gobierno || ''}
+[PLAN SUCESIÓN]: ${data.plan_sucesion_definido || ''}
+[NIVEL CUMPLIMIENTO FISCAL]: ${data.nivel_cumplimiento_fiscal || ''}
+[ASESORÍA LEGAL PERMANENTE]: ${data.asesoria_legal_permanente || ''}
+[TIPO EMPRESA]: ${data.tipo_empresa || ''}
+[NÚMERO SOCIOS]: ${data.numero_socios || ''}
+[ACUERDOS SOCIOS]: ${data.acuerdos_entre_socios || ''}
+[SEPARACIÓN PATRIMONIO]: ${data.separacion_patrimonio || ''}
+[SEGURO RESPONSABILIDAD]: ${data.seguro_responsabilidad || ''}
+[ESTRUCTURA HOLDING]: ${data.estructura_holding || ''}
+[IMPACTO AUSENCIA CLAVE]: ${data.impacto_ausencia_persona_clave || ''}
+[PERSONAS CLAVE]: ${data.lista_personas_clave || ''}
+[COSTO AUSENCIA CLAVE]: ${data.costo_estimado_perdida_clave || ''}
+[PLAN CONTINGENCIA EXISTENTE]: ${data.plan_contingencia_existente || ''}
+[PRESTACIONES EMPLEADOS]: ${data.tipo_prestaciones_empleados || ''}
+[ROTACIÓN TALENTO]: ${data.gestion_rotacion_personal || ''}
+[SEGURO PERSONAS CLAVE]: ${data.seguro_personas_clave || ''}
+[PREOCUPACIONES CONTINUIDAD]: ${data.preocupaciones_continuidad || ''}
+[SITUACIÓN UTILIDAD FISCAL]: ${data.situacion_utilidad_fiscal || ''}
+[FLUJO EFECTIVO]: ${data.gestion_flujo_efectivo || ''}
+[CONOCIMIENTO COEFICIENTE UTILIDAD]: ${data.conocimiento_coeficiente_utilidad || ''}
+[USO PRINCIPAL UTILIDADES]: ${data.uso_principal_utilidades || ''}
+[MÉTODO PAGO DIRECTIVOS]: ${data.metodo_pago_directivos || ''}
+[ESTRATEGIAS FISCALES ACTUALES]: ${data.estrategias_fiscales_actuales || ''}
+[PROYECTOS FUTUROS]: ${data.proyectos_futuros_empresa || ''}
+[FONDEO PROYECTOS]: ${data.metodo_fondeo_proyectos || ''}
+[RESERVAS EMPRESARIALES]: ${data.reservas_empresariales || ''}
+
+---
+
+## ✅ **Reglas Finales**
+- Usa **términos de negocio**, explica como consultor.
+- No inventes datos que no estén en el input.
+- Si algo falta para una recomendación clave, sugiere qué preguntas adicionales harías.
+- Genera una tabla o lista ordenada si es útil para clarificar pasos.
+- Termina con un **CTA suave** invitando a agendar asesoría.
+`;
+                return prompt;
             }
 
             function generateSummaryHtml(data) {
@@ -482,7 +564,7 @@
                 return /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             }
 
-            async function downloadReportAsPDF() {
+            async function dowennloadReportAsPDF() {
                 const { jsPDF } = window.jspdf;
                 const reportElement = document.getElementById('reportContent');
                 const downloadButton = document.getElementById('downloadPdfBtn');
