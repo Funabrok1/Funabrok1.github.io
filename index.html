@@ -360,68 +360,41 @@ Para cada oportunidad, explica:
 ---
 
 ## 🚫 **6) Condicionantes y Precauciones**
-**IMPORTANTE:**  
-- No enlistes estrategias que no sean viables ni menciones que "no aplican".
-- Si faltan datos para definir alguna estrategia clave, sugiere preguntas o información que el empresario debe proporcionar para evaluar su viabilidad futura.
+Aclara con honestidad:
+- Qué soluciones NO son viables actualmente y por qué (Ej: pocos empleados, antigüedad baja, estructura aún informal)
+- Qué requisitos se necesitan cumplir en el futuro para considerar esas estrategias
+- Si falta información, sugiere qué datos adicionales serían necesarios para un diagnóstico más preciso
 
 ---
 
-## 📌 **REGLA PRINCIPAL:**
-✅ **NO INCLUYAS estrategias no viables ni adviertas que algo no aplica. Sencillamente omítelas y entrega solo lo que realmente suma valor y es ejecutable.**
+## 📌 **Input: Diagnóstico Real**
 
-✅ Si toda la información disponible es suficiente, no pongas aclaraciones innecesarias.
+Usa la siguiente información estructurada para tu análisis:
 
-✅ Termina siempre con un CTA elegante invitando a agendar una asesoría personalizada para implementar el plan.
-
-✅ Incluye al final un bloque JSON `timelineData` con listas de acciones para corto, mediano y largo plazo.
-
----
-
-## 🏷️ **Input — Diagnóstico Completo:**
-
-[NOMBRE EMPRESA]: ${data.nombre_empresa || ''}  
-[SECTOR]: ${data.sector || ''}  
-[DESCRIPCIÓN]: ${data.descripcion_negocio || ''}  
-[ANTIGÜEDAD]: ${data.antiguedad_empresa || ''}  
-[ROL USUARIO]: ${data.puesto_usuario || ''}  
-[NÚMERO EMPLEADOS]: ${data.numero_empleados || ''}  
-[TIPO SOCIEDAD]: ${data.tipo_sociedad || ''}  
-[NIVEL FORMALIDAD]: ${data.nivel_formalidad_corporativa || ''}  
-[EXISTENCIA CONTRATOS]: ${data.existencia_contratos || ''}  
-[PROPIEDAD INTELECTUAL]: ${data.propiedad_intelectual_registrada || ''}  
-[GESTIÓN COMPLIANCE]: ${data.gestion_compliance || ''}  
-[PROTOCOLOS GOBIERNO]: ${data.protocolos_gobierno || ''}  
-[PLAN SUCESIÓN]: ${data.plan_sucesion_definido || ''}  
-[NIVEL CUMPLIMIENTO FISCAL]: ${data.nivel_cumplimiento_fiscal || ''}  
-[ASESORÍA LEGAL PERMANENTE]: ${data.asesoria_legal_permanente || ''}  
-[TIPO EMPRESA]: ${data.tipo_empresa || ''}  
-[NÚMERO SOCIOS]: ${data.numero_socios || ''}  
-[ACUERDOS SOCIOS]: ${data.acuerdos_entre_socios || ''}  
-[SEPARACIÓN PATRIMONIO]: ${data.separacion_patrimonio || ''}  
-[SEGURO RESPONSABILIDAD]: ${data.seguro_responsabilidad || ''}  
-[ESTRUCTURA HOLDING]: ${data.estructura_holding || ''}  
-[IMPACTO AUSENCIA CLAVE]: ${data.impacto_ausencia_persona_clave || ''}  
-[PERSONAS CLAVE]: ${data.lista_personas_clave || ''}  
-[COSTO AUSENCIA CLAVE]: ${data.costo_estimado_perdida_clave || ''}  
-[PLAN CONTINGENCIA EXISTENTE]: ${data.plan_contingencia_existente || ''}  
-[PRESTACIONES EMPLEADOS]: ${data.tipo_prestaciones_empleados || ''}  
-[ROTACIÓN TALENTO]: ${data.gestion_rotacion_personal || ''}  
-[SEGURO PERSONAS CLAVE]: ${data.seguro_personas_clave || ''}  
-[PREOCUPACIONES CONTINUIDAD]: ${data.preocupaciones_continuidad || ''}  
-[SITUACIÓN UTILIDAD FISCAL]: ${data.situacion_utilidad_fiscal || ''}  
-[FLUJO EFECTIVO]: ${data.gestion_flujo_efectivo || ''}  
-[CONOCIMIENTO COEFICIENTE UTILIDAD]: ${data.conocimiento_coeficiente_utilidad || ''}  
-[USO PRINCIPAL UTILIDADES]: ${data.uso_principal_utilidades || ''}  
-[MÉTODO PAGO DIRECTIVOS]: ${data.metodo_pago_directivos || ''}  
-[ESTRATEGIAS FISCALES ACTUALES]: ${data.estrategias_fiscales_actuales || ''}  
-[PROYECTOS FUTUROS]: ${data.proyectos_futuros_empresa || ''}  
-[FONDEO PROYECTOS]: ${data.metodo_fondeo_proyectos || ''}  
-[RESERVAS EMPRESARIALES]: ${data.reservas_empresariales || ''}
+[NOMBRE EMPRESA]: ${data.nombre_empresa}
+[SECTOR]: ${data.sector}
+[DESCRIPCIÓN]: ${data.descripcion_negocio}
+[ANTIGÜEDAD]: ${data.antiguedad_empresa}
+[ROL USUARIO]: ${data.puesto_usuario}
+[NÚMERO EMPLEADOS]: ${data.numero_empleados}
+[TIPO SOCIEDAD]: ${data.tipo_sociedad}
+[NIVEL FORMALIDAD]: ${data.nivel_formalidad_corporativa}
+[EXISTENCIA CONTRATOS]: ${data.existencia_contratos}
+[PROPIEDAD INTELECTUAL]: ${data.propiedad_intelectual_registrada}
+[SEGUROS CLAVE]: ${data.seguros_clave}
+[UTILIDADES]: ${data.utilidades}
+[RESERVAS]: ${data.reservas}
+[PLAN SUCESIÓN]: ${data.plan_sucesion}
+[PROYECTOS FUTUROS]: ${data.proyectos_futuros}
+[METODOS FONDEO]: ${data.metodos_fondeo}
+[ACUERDOS SOCIOS]: ${data.acuerdos_socios}
+[NUMERO SOCIOS]: ${data.numero_socios}
+[COMENTARIOS ADICIONALES]: ${data.comentarios_adicionales}
 
 ---
 
-## 📅 **Formato de salida adicional:**
-Al final, incluye este bloque JSON:
+Al final, entrega la siguiente estructura JSON solo como texto de ejemplo:
+
 {
   "timelineData": {
     "corto_plazo": ["Acción 1", "Acción 2"],
