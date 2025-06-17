@@ -809,8 +809,9 @@ Al final, incluye este bloque JSON:
                     if (fieldsetWrapper) fieldsetWrapper.classList.remove('border-red-500');
                     field.classList.remove('border-red-500');
 
-                    if (field.offsetParent === null) return;
-                    
+                    // Solo valida campos visibles
+                    if (field.offsetParent === null) return; // Salta campos ocultos
+
                     if (field.type === 'radio') {
                         const groupName = field.name;
                         const group = currentStepElement.querySelectorAll(`input[name="${groupName}"]`);
