@@ -361,7 +361,7 @@ Para cada oportunidad, explica:
 
 ## 🚫 **6) Condicionantes y Precauciones**
 **IMPORTANTE:**  
-- No enlistes estrategias que no sean viables ni menciones que “no aplican”.
+- No enlistes estrategias que no sean viables ni menciones que "no aplican".
 - Si faltan datos para definir alguna estrategia clave, sugiere preguntas o información que el empresario debe proporcionar para evaluar su viabilidad futura.
 
 ---
@@ -553,26 +553,35 @@ Al final, incluye este bloque JSON:
 
             function displayClarificationQuestions(questionsText) {
                 clarificationForm.innerHTML = '';
-                const questions = questionsText.split('\n').filter(line => /^\s*\d+\.\s/.test(line));
+                // Título e instrucciones claras
+                clarificationForm.insertAdjacentHTML('beforebegin', `
+                    <div id="clarificationInstructions" class="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <h3 class="text-xl font-bold mb-2 text-blue-900">Preguntas de Aclaración</h3>
+                        <p class="text-gray-700">Para personalizar aún más tu diagnóstico, por favor responde las siguientes preguntas. Al enviar tus respuestas, se generará un reporte actualizado y más preciso.</p>
+                    </div>
+                `);
+                const questions = questionsText.split('\n').filter(line => /^\s*\*?\s*\d*\.?\s*¿/.test(line));
                 questions.forEach((q, index) => {
                     const questionId = `clarification_answer_${index}`;
-                    const questionLabel = q.replace(/^\s*\d+\.\s*/, '');
+                    const questionLabel = q.replace(/^\s*\*?\s*\d*\.?\s*/, '');
                     const formGroup = document.createElement('div');
-                    formGroup.className = 'space-y-1';
+                    formGroup.className = 'space-y-1 mb-4';
                     const label = document.createElement('label');
                     label.htmlFor = questionId;
-                    label.className = 'block text-sm font-medium';
+                    label.className = 'block text-base font-medium text-gray-800';
                     label.textContent = questionLabel;
                     const textarea = document.createElement('textarea');
                     textarea.id = questionId;
                     textarea.name = questionId;
                     textarea.rows = 2;
-                    textarea.className = 'w-full px-3 py-2 border border-gray-300 rounded-md';
+                    textarea.className = 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900';
                     textarea.dataset.originalQuestion = q;
                     formGroup.appendChild(label);
                     formGroup.appendChild(textarea);
                     clarificationForm.appendChild(formGroup);
                 });
+                // Botón atractivo
+                resubmitBtn.className = 'bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded-lg mt-4 w-full sm:w-auto transition-colors shadow';
                 manageModalView('clarification');
             }
 
