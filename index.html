@@ -711,6 +711,19 @@ Al final, entrega la siguiente estructura JSON solo como texto de ejemplo:
                     };
                     printWindow.document.close();
                 }
+
+                // Al finalizar la descarga, avanza al siguiente paso
+                setTimeout(() => {
+                    if (typeof showNextStep === 'function') {
+                        showNextStep();
+                    } else if (typeof showMondayStep === 'function') {
+                        showMondayStep();
+                    } else {
+                        // Fallback: muestra el bloque de agendar si existe
+                        const mondayBlock = document.getElementById('mondayStep');
+                        if (mondayBlock) mondayBlock.classList.remove('hidden');
+                    }
+                }, 500);
             }
 
             form.addEventListener('submit', async (e) => {
