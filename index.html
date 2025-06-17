@@ -444,6 +444,9 @@ Al final, incluye este bloque JSON:
             }
 
             function showStep(stepIndex) {
+                // Elimina el bloque de instrucciones de aclaración si existe
+                const clarificationInstructions = document.getElementById('clarificationInstructions');
+                if (clarificationInstructions) clarificationInstructions.remove();
                 formSteps.forEach(step => step.classList.remove('form-step-active'));
                 formSteps[stepIndex].classList.add('form-step-active');
                 const progress = ((stepIndex + 1) / totalSteps) * 100;
