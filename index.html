@@ -298,121 +298,134 @@
             const fieldLabels = { 'nombre_empresa': 'Nombre de la Empresa', 'sector': 'Sector', 'descripcion_negocio': 'Descripción del Negocio', 'puesto_usuario': 'Rol o posición actual', 'antiguedad_empresa': 'Antigüedad de la empresa', 'numero_empleados': 'Número de empleados', 'mayor_reto_superado': 'Mayor reto superado', 'hito_mas_importante': 'Mayor aprendizaje o hito', 'nombre_contacto': 'Nombre de Contacto', 'email_contacto': 'Email de Contacto', 'telefono_contacto': 'Teléfono de Contacto', 'tipo_sociedad': 'Tipo de Sociedad', 'nivel_formalidad_corporativa': 'Nivel de formalidad', 'existencia_contratos': 'Existencia de contratos claros', 'propiedad_intelectual_registrada': 'Registro de patentes o marcas', 'gestion_compliance': 'Gestión de cumplimiento normativo', 'protocolos_gobierno': 'Protocolos de gobierno corporativo', 'plan_sucesion_definido': 'Plan de sucesión definido', 'nivel_cumplimiento_fiscal': 'Nivel de cumplimiento fiscal', 'asesoria_legal_permanente': 'Asesoría legal y fiscal permanente', 'giro_principal': 'Giro principal del negocio', 'posicionamiento_mercado': 'Posicionamiento frente a competencia', 'estrategias_marketing': 'Estrategias de marketing', 'tipo_empresa': 'Tipo de empresa', 'numero_socios': 'Número de socios', 'acuerdos_entre_socios': 'Acuerdos formales entre socios', 'separacion_patrimonio': 'Separación de patrimonio', 'seguro_responsabilidad': 'Seguro de responsabilidad civil', 'estructura_holding': 'Estructuras de holding', 'impacto_ausencia_persona_clave': 'Impacto por ausencia de persona clave', 'lista_personas_clave': 'Personas indispensable para la operación', 'costo_estimado_perdida_clave': 'Costo financiero estimado por ausencia', 'plan_contingencia_existente': 'Plan de sucesión o fondo de contingencia', 'tipo_prestaciones_empleados': 'Prestaciones a empleados', 'gestion_rotacion_personal': 'Gestión de rotación de talento', 'seguro_personas_clave': 'Seguro de personas clave', 'preocupaciones_continuidad': 'Preocupaciones sobre continuidad', 'situacion_utilidad_fiscal': 'Situación de la utilidad fiscal', 'gestion_flujo_efectivo': 'Desafíos en flujo de efectivo', 'conocimiento_coeficiente_utilidad': 'Conocimiento del coeficiente de utilidad', 'uso_principal_utilidades': 'Uso principal de las utilidades', 'metodo_pago_directivos': 'Método de compensación a directivos/socios', 'estrategias_fiscales_actuales': 'Estrategia actual para reducir carga de ISR o PTU', 'proyectos_futuros_empresa': 'Proyectos importantes para los próximos 3-5 años', 'metodo_fondeo_proyectos': 'Método de fondeo para proyectos', 'reservas_empresariales': 'Existencia de fondos o reservas empresariales' };
 
             function generateGeminiPrompt(data) {
-                let prompt = `Eres un consultor empresarial senior con MBA y especialización en:
-- Estrategia corporativa
-- Planeación fiscal avanzada (anticipo de rendimientos, renta vitalicia, beneficios sindicales)
-- Blindaje patrimonial y continuidad de negocio (seguros de hombre clave, intersocios)
-- Estrategia de marketing y posicionamiento
-- Gobierno corporativo, compliance y escalabilidad empresarial
+                let prompt = `Eres un consultor empresarial senior con MBA, experto en:
+- Estrategia corporativa y escalabilidad de negocio
+- Planeación fiscal avanzada (Anticipos a Rendimientos, Renta Vitalicia, Beneficio Sindical)
+- Blindaje patrimonial y continuidad de negocio (Seguro de Hombre Clave, Intersocios)
+- Estrategias de marketing y posicionamiento competitivo
+- Gobierno corporativo, compliance, protocolo de socios y estructuras holding
 
-Tu tarea es analizar la siguiente información proporcionada por un empresario a través de su diagnóstico. El análisis debe estar organizado en 6 bloques claros y accionables:
-
----
-
-## 📊 1) Diagnóstico General
-Resume en lenguaje técnico, pero entendible para un directivo, cómo percibes la situación actual de la empresa. Destaca factores como:
-- Estructura legal y gobierno corporativo
-- Nivel de formalidad y cumplimiento fiscal
-- Protección de socios y continuidad de negocio
-- Situación de flujo de efectivo y uso de utilidades
-- Estado de blindaje patrimonial y liquidez estratégica
+Tu tarea es analizar la información recopilada de un empresario mediante su diagnóstico. Organiza tu respuesta en los siguientes 6 bloques, con enfoque consultivo, técnico y estratégico:
 
 ---
 
-## 🚀 2) Riesgos y Áreas Vulnerables
-Enumera los principales riesgos que podrían impactar:
-- Operación
-- Continuidad del negocio
-- Sostenibilidad financiera
-- Eficiencia fiscal
+## 📊 **1) Diagnóstico General**
+Describe, en un lenguaje accesible pero técnico, la situación actual de la empresa considerando:
+- Contexto operativo, sector y giro principal
+- Estructura legal y tipo de sociedad
+- Nivel de formalidad corporativa y contractual
+- Situación de gobierno corporativo y plan de sucesión
+- Estado del blindaje patrimonial, seguros clave y separación de patrimonio
+- Cumplimiento fiscal y estrategias actuales de optimización
+- Uso de utilidades y reservas empresariales
+- Proyectos futuros y métodos de fondeo previstos
 
 ---
 
-## 💡 3) Oportunidades Estratégicas
-Identifica oportunidades de mejora en:
-- Estructura legal y protocolos de socios
-- Blindaje patrimonial (seguros clave, fondos de contingencia, separación patrimonial)
-- Eficiencia fiscal (uso de figuras como renta vitalicia, anticipos a rendimientos, esquemas sindicales)
-- Estrategia de retención de talento y beneficios para empleados
-- Marketing y posicionamiento en su nicho
+## ⚠️ **2) Riesgos y Áreas Vulnerables**
+Enumera con claridad los principales riesgos detectados que podrían afectar:
+- La operación diaria
+- La sucesión o continuidad ante la ausencia de personas clave
+- La estructura fiscal y la eficiencia en la carga tributaria
+- La retención de talento y beneficios para colaboradores
+- La protección de activos estratégicos
 
 ---
 
-## 🧭 4) Plan de Acción Priorizado
-Propón un roadmap organizado por etapas:
-- Corto Plazo (0-6 meses)
-- Mediano Plazo (6-18 meses)
-- Largo Plazo (18-36 meses)
-
-Enlista en cada etapa acciones específicas y su impacto esperado.
+## 💡 **3) Oportunidades Estratégicas**
+Identifica oportunidades de mejora o ajustes en:
+- Estructura y gobierno corporativo (protocolos, acuerdos entre socios)
+- Blindaje patrimonial (seguros de vida clave, fondo de contingencia, separación de patrimonio)
+- Estrategias fiscales (renta vitalicia, anticipos a rendimientos, esquemas sindicales) **Solo si son viables**
+- Retención de talento (planes de previsión social, beneficios deducibles)
+- Estrategias de marketing, posicionamiento y expansión de mercado
 
 ---
 
-## 📝 5) Recomendaciones Específicas
-Para cada oportunidad detectada, explica:
+## ✅ **4) Plan de Acción Priorizado**
+Diseña una hoja de ruta concreta y accionable, organizada en:
+- **Corto Plazo (0–6 meses):** pasos inmediatos de alto impacto.
+- **Mediano Plazo (6–18 meses):** acciones estructurales o de optimización.
+- **Largo Plazo (18–36 meses):** estrategias para escalabilidad y blindaje futuro.
+
+---
+
+## 🗂️ **5) Recomendaciones Específicas**
+Para cada oportunidad, explica:
 - Qué estrategia aplicar
-- Cómo implementarla (figuras legales, tipos de seguros, contratos)
-- Beneficio financiero y patrimonial esperado
-- Fundamento legal o fiscal si aplica
+- Cómo ejecutarla (figuras legales, contratos, pólizas, procesos internos)
+- Beneficio esperado (económico, fiscal o patrimonial)
+- Base legal o fiscal si aplica
 
 ---
 
-## ⚠️ 6) Condicionantes y Precauciones
-Si detectas alguna restricción, como número de empleados bajo, antigüedad de la empresa menor a 12 meses, ausencia de socios, etc., aclara qué estrategias **NO** aplicarías aún y qué condiciones se deben cumplir para implementarlas después.
+## 🚫 **6) Condicionantes y Precauciones**
+Aclara con honestidad:
+- Qué soluciones NO son viables actualmente y por qué (Ej: pocos empleados, antigüedad baja, estructura aún informal)
+- Qué requisitos se necesitan cumplir en el futuro para considerar esas estrategias
+- Si falta información, sugiere preguntas adicionales que se deben responder
 
 ---
 
-## 📌 **Input: Diagnóstico Real**
+## 📌 **REGLA CLAVE:**
+➡️ **Si una estrategia NO es viable o no se recomienda para la realidad actual, NO la incluyas en el plan ni en las recomendaciones. Omite lo irrelevante. Solo propón lo que realmente tenga sentido implementar ahora o planear para el corto/mediano plazo.**
 
-Usa la siguiente información estructurada para tu análisis:
+---
 
-[NOMBRE EMPRESA]: ${data.nombre_empresa || ''}
-[SECTOR]: ${data.sector || ''}
-[DESCRIPCIÓN]: ${data.descripcion_negocio || ''}
-[ANTIGÜEDAD]: ${data.antiguedad_empresa || ''}
-[ROL USUARIO]: ${data.puesto_usuario || ''}
-[NÚMERO EMPLEADOS]: ${data.numero_empleados || ''}
-[TIPO SOCIEDAD]: ${data.tipo_sociedad || ''}
-[NIVEL FORMALIDAD]: ${data.nivel_formalidad_corporativa || ''}
-[EXISTENCIA CONTRATOS]: ${data.existencia_contratos || ''}
-[PROPIEDAD INTELECTUAL]: ${data.propiedad_intelectual_registrada || ''}
-[GESTIÓN COMPLIANCE]: ${data.gestion_compliance || ''}
-[PROTOCOLOS GOBIERNO]: ${data.protocolos_gobierno || ''}
-[PLAN SUCESIÓN]: ${data.plan_sucesion_definido || ''}
-[NIVEL CUMPLIMIENTO FISCAL]: ${data.nivel_cumplimiento_fiscal || ''}
-[ASESORÍA LEGAL PERMANENTE]: ${data.asesoria_legal_permanente || ''}
-[TIPO EMPRESA]: ${data.tipo_empresa || ''}
-[NÚMERO SOCIOS]: ${data.numero_socios || ''}
-[ACUERDOS SOCIOS]: ${data.acuerdos_entre_socios || ''}
-[SEPARACIÓN PATRIMONIO]: ${data.separacion_patrimonio || ''}
-[SEGURO RESPONSABILIDAD]: ${data.seguro_responsabilidad || ''}
-[ESTRUCTURA HOLDING]: ${data.estructura_holding || ''}
-[IMPACTO AUSENCIA CLAVE]: ${data.impacto_ausencia_persona_clave || ''}
-[PERSONAS CLAVE]: ${data.lista_personas_clave || ''}
-[COSTO AUSENCIA CLAVE]: ${data.costo_estimado_perdida_clave || ''}
-[PLAN CONTINGENCIA EXISTENTE]: ${data.plan_contingencia_existente || ''}
-[PRESTACIONES EMPLEADOS]: ${data.tipo_prestaciones_empleados || ''}
-[ROTACIÓN TALENTO]: ${data.gestion_rotacion_personal || ''}
-[SEGURO PERSONAS CLAVE]: ${data.seguro_personas_clave || ''}
-[PREOCUPACIONES CONTINUIDAD]: ${data.preocupaciones_continuidad || ''}
-[SITUACIÓN UTILIDAD FISCAL]: ${data.situacion_utilidad_fiscal || ''}
-[FLUJO EFECTIVO]: ${data.gestion_flujo_efectivo || ''}
-[CONOCIMIENTO COEFICIENTE UTILIDAD]: ${data.conocimiento_coeficiente_utilidad || ''}
-[USO PRINCIPAL UTILIDADES]: ${data.uso_principal_utilidades || ''}
-[MÉTODO PAGO DIRECTIVOS]: ${data.metodo_pago_directivos || ''}
-[ESTRATEGIAS FISCALES ACTUALES]: ${data.estrategias_fiscales_actuales || ''}
-[PROYECTOS FUTUROS]: ${data.proyectos_futuros_empresa || ''}
-[FONDEO PROYECTOS]: ${data.metodo_fondeo_proyectos || ''}
+## 🏷️ **Input — Diagnóstico Completo:**
+
+[NOMBRE EMPRESA]: ${data.nombre_empresa || ''}  
+[SECTOR]: ${data.sector || ''}  
+[DESCRIPCIÓN]: ${data.descripcion_negocio || ''}  
+[ANTIGÜEDAD]: ${data.antiguedad_empresa || ''}  
+[ROL USUARIO]: ${data.puesto_usuario || ''}  
+[NÚMERO EMPLEADOS]: ${data.numero_empleados || ''}  
+[TIPO SOCIEDAD]: ${data.tipo_sociedad || ''}  
+[NIVEL FORMALIDAD]: ${data.nivel_formalidad_corporativa || ''}  
+[EXISTENCIA CONTRATOS]: ${data.existencia_contratos || ''}  
+[PROPIEDAD INTELECTUAL]: ${data.propiedad_intelectual_registrada || ''}  
+[GESTIÓN COMPLIANCE]: ${data.gestion_compliance || ''}  
+[PROTOCOLOS GOBIERNO]: ${data.protocolos_gobierno || ''}  
+[PLAN SUCESIÓN]: ${data.plan_sucesion_definido || ''}  
+[NIVEL CUMPLIMIENTO FISCAL]: ${data.nivel_cumplimiento_fiscal || ''}  
+[ASESORÍA LEGAL PERMANENTE]: ${data.asesoria_legal_permanente || ''}  
+[TIPO EMPRESA]: ${data.tipo_empresa || ''}  
+[NÚMERO SOCIOS]: ${data.numero_socios || ''}  
+[ACUERDOS SOCIOS]: ${data.acuerdos_entre_socios || ''}  
+[SEPARACIÓN PATRIMONIO]: ${data.separacion_patrimonio || ''}  
+[SEGURO RESPONSABILIDAD]: ${data.seguro_responsabilidad || ''}  
+[ESTRUCTURA HOLDING]: ${data.estructura_holding || ''}  
+[IMPACTO AUSENCIA CLAVE]: ${data.impacto_ausencia_persona_clave || ''}  
+[PERSONAS CLAVE]: ${data.lista_personas_clave || ''}  
+[COSTO AUSENCIA CLAVE]: ${data.costo_estimado_perdida_clave || ''}  
+[PLAN CONTINGENCIA EXISTENTE]: ${data.plan_contingencia_existente || ''}  
+[PRESTACIONES EMPLEADOS]: ${data.tipo_prestaciones_empleados || ''}  
+[ROTACIÓN TALENTO]: ${data.gestion_rotacion_personal || ''}  
+[SEGURO PERSONAS CLAVE]: ${data.seguro_personas_clave || ''}  
+[PREOCUPACIONES CONTINUIDAD]: ${data.preocupaciones_continuidad || ''}  
+[SITUACIÓN UTILIDAD FISCAL]: ${data.situacion_utilidad_fiscal || ''}  
+[FLUJO EFECTIVO]: ${data.gestion_flujo_efectivo || ''}  
+[CONOCIMIENTO COEFICIENTE UTILIDAD]: ${data.conocimiento_coeficiente_utilidad || ''}  
+[USO PRINCIPAL UTILIDADES]: ${data.uso_principal_utilidades || ''}  
+[MÉTODO PAGO DIRECTIVOS]: ${data.metodo_pago_directivos || ''}  
+[ESTRATEGIAS FISCALES ACTUALES]: ${data.estrategias_fiscales_actuales || ''}  
+[PROYECTOS FUTUROS]: ${data.proyectos_futuros_empresa || ''}  
+[FONDEO PROYECTOS]: ${data.metodo_fondeo_proyectos || ''}  
 [RESERVAS EMPRESARIALES]: ${data.reservas_empresariales || ''}
 
 ---
 
-## ✅ **Reglas Finales**
-- Usa **términos de negocio**, explica como consultor.
-- No inventes datos que no estén en el input.
-- Si algo falta para una recomendación clave, sugiere qué preguntas adicionales harías.
-- Genera una tabla o lista ordenada si es útil para clarificar pasos.
-- Termina con un **CTA suave** invitando a agendar asesoría.
+## 📅 **Formato de salida adicional:**
+Al final, incluye este bloque JSON:
+```json
+{
+  "timelineData": {
+    "corto_plazo": ["Acción 1", "Acción 2"],
+    "mediano_plazo": ["Acción 3"],
+    "largo_plazo": ["Acción 4"]
+  }
+}
+```
 `;
                 return prompt;
             }
@@ -564,7 +577,7 @@ Usa la siguiente información estructurada para tu análisis:
                 return /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             }
 
-            async function dowennloadReportAsPDF() {
+            async function downloadReportAsPDF() {
                 const { jsPDF } = window.jspdf;
                 const reportElement = document.getElementById('reportContent');
                 const downloadButton = document.getElementById('downloadPdfBtn');
