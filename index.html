@@ -431,7 +431,20 @@ Al final, entrega la siguiente estructura JSON solo como texto de ejemplo:
             }
 
             function formatAIResponse(text) {
-                let html = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                let html = text;
+                // Títulos ## y ###
+                html = html.replace(/^### (.*)$/gim, '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>');
+                html = html.replace(/^## (.*)$/gim, '<h2 class="text-xl font-bold mt-5 mb-3 border-b pb-2">$1</h2>');
+                // Negritas y cursivas
+                html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+                // Saltos de línea dobles a <br><br>
+                html = html.replace(/\n\n/g, '<br><br>');
+                // Saltos de línea simples a <br>
+                html = html.replace(/\n/g, '<br>');
+                // Escapar < y >
+                html = html.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                // Tablas markdown
                 const tableRegex = /(\|.*\|(?:\r\n|\n)?)+/g;
                 html = html.replace(tableRegex, (tableMatch) => {
                     const rows = tableMatch.trim().split('\n').filter(r => r.includes('|'));
@@ -703,7 +716,11 @@ Al final, entrega la siguiente estructura JSON solo como texto de ejemplo:
                     } else {
                         // Fallback: muestra el bloque de agendar si existe
                         const mondayBlock = document.getElementById('mondayFormContainer');
-                        if (mondayBlock) mondayBlock.classList.remove('hidden');
+                        if (mondayBlock) {
+                            mondayBlock.classList.remove('hidden');
+                            const downloadPrompt = document.getElementById('downloadPrompt');
+                            if (downloadPrompt) downloadPrompt.classList.add('hidden');
+                        }
                     }
                 }, 500);
             }
