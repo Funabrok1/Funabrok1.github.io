@@ -431,37 +431,42 @@ Al final, entrega la siguiente estructura JSON solo como texto de ejemplo:
             }
 
             function formatAIResponse(text) {
+                // Primero, intenta extraer el plan de acción priorizado como tabla
+                const planRegex = /Plan de Acción Priorizado[\s\S]*?(Corto Plazo.*?Largo Plazo.*?)(?:\n\n|$)/i;
+                const match = text.match(planRegex);
+                if (match) {
+                    const planText = match[1];
+                    // Extrae los bloques de cada plazo
+                    const corto = (planText.match(/Corto Plazo.*?\n([\s\S]*?)(?=Mediano Plazo|Largo Plazo|$)/i) || [,''])[1].trim().split(/\n\*/).map(s => s.replace(/^\*/, '').trim()).filter(Boolean);
+                    const mediano = (planText.match(/Mediano Plazo.*?\n([\s\S]*?)(?=Largo Plazo|$)/i) || [,''])[1].trim().split(/\n\*/).map(s => s.replace(/^\*/, '').trim()).filter(Boolean);
+                    const largo = (planText.match(/Largo Plazo.*?\n([\s\S]*)/i) || [,''])[1].trim().split(/\n\*/).map(s => s.replace(/^\*/, '').trim()).filter(Boolean);
+                    let html = '<h3 class="font-bold text-lg mt-4 mb-2">Plan de Acción Priorizado</h3>';
+                    html += '<table class="min-w-full border text-base mb-4"><thead><tr>';
+                    html += '<th class="border px-4 py-2">Corto Plazo</th>';
+                    html += '<th class="border px-4 py-2">Mediano Plazo</th>';
+                    html += '<th class="border px-4 py-2">Largo Plazo</th>';
+                    html += '</tr></thead><tbody><tr>';
+                    html += `<td class="border px-4 py-2">${corto.join('<br>')}</td>`;
+                    html += `<td class="border px-4 py-2">${mediano.join('<br>')}</td>`;
+                    html += `<td class="border px-4 py-2">${largo.join('<br>')}</td>`;
+                    html += '</tr></tbody></table>';
+                    // Elimina el bloque original del texto y reemplaza por la tabla
+                    text = text.replace(planRegex, html);
+                }
+                // Resto del formateo (tablas markdown, etc.)
                 let html = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
                 const tableRegex = /(\|.*\|(?:\r\n|\n)?)+/g;
                 html = html.replace(tableRegex, (tableMatch) => {
                     const rows = tableMatch.trim().split('\n').filter(r => r.includes('|'));
                     if (rows.length < 2 || !rows[1].includes('---')) return tableMatch;
                     let tableHtml = '<div class="overflow-x-auto my-4"><table class="min-w-full divide-y divide-gray-300 border rounded-lg">';
-                    const headerCells = rows[0].split('|').slice(1, -1);
-                    tableHtml += '<thead class="bg-gray-50"><tr>';
-                    headerCells.forEach(cell => {
-                        tableHtml += `<th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">${cell.trim()}</th>`;
+                    rows.forEach((row, i) => {
+                        const tag = i === 0 ? 'th' : 'td';
+                        tableHtml += '<tr>' + row.split('|').slice(1, -1).map(cell => `<${tag} class="px-4 py-2">${cell.trim()}</${tag}>`).join('') + '</tr>';
                     });
-                    tableHtml += '</tr></thead>';
-                    tableHtml += '<tbody class="bg-white divide-y divide-gray-200">';
-                    rows.slice(2).forEach(row => {
-                        const rowCells = row.split('|').slice(1, -1);
-                        tableHtml += '<tr>';
-                        rowCells.forEach(cell => {
-                            tableHtml += `<td class="px-4 py-4 text-sm">${cell.trim()}</td>`;
-                        });
-                        tableHtml += '</tr>';
-                    });
-                    tableHtml += '</tbody></table></div>';
+                    tableHtml += '</table></div>';
                     return tableHtml;
                 });
-                html = html.replace(/^### (.*$)/gim, '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>');
-                html = html.replace(/^## (.*$)/gim, '<h2 class="text-xl font-bold mt-5 mb-3 border-b pb-2">$1</h2>');
-                html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-                html = html.replace(/\n/g, '<br>');
-                html = html.replace(/<br>\s*-\s/g, '<li class="ml-5 list-disc">');
-                html = html.replace(/<br>\s*\d+\.\s/g, (match) => `<li class="ml-5 list-decimal" value="${match.match(/\d+/)[0]}">`);
                 return html;
             }
 
@@ -720,7 +725,7 @@ Al final, entrega la siguiente estructura JSON solo como texto de ejemplo:
                         showMondayStep();
                     } else {
                         // Fallback: muestra el bloque de agendar si existe
-                        const mondayBlock = document.getElementById('mondayStep');
+                        const mondayBlock = document.getElementById('mondayFormContainer');
                         if (mondayBlock) mondayBlock.classList.remove('hidden');
                     }
                 }, 500);
