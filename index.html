@@ -827,24 +827,26 @@ Al final, incluye este bloque JSON:
                     // Solo valida campos visibles y habilitados
                     if (field.offsetParent === null || field.disabled) return;
 
-                    // Depuración: log de campos validados
-                    // console.log('Validando campo:', field.name, 'Valor:', field.value, 'Visible:', field.offsetParent !== null, 'Habilitado:', !field.disabled);
-
                     if (field.type === 'radio') {
                         const groupName = field.name;
                         const group = currentStepElement.querySelectorAll(`input[name="${groupName}"]`);
                         if (!Array.from(group).some(radio => radio.checked && radio.offsetParent !== null && !radio.disabled)) {
                             isValid = false;
                             if (fieldsetWrapper) fieldsetWrapper.classList.add('border-red-500');
+                            // Log de depuración para radios
+                            console.warn('Campo radio requerido no seleccionado:', groupName, group);
                         }
                     } else if (!field.value.trim()) {
                         isValid = false;
                         field.classList.add('border-red-500');
+                        // Log de depuración para campos vacíos
+                        console.warn('Campo requerido vacío:', field.name, field);
                     }
                 });
                 
                 if (!isValid) {
                     validationMessage.classList.remove('hidden');
+                    console.warn('No se puede avanzar de paso. Hay campos requeridos sin completar o inválidos.');
                 }
                 return isValid;
             }
