@@ -373,7 +373,7 @@ Usa la siguiente información estructurada para tu análisis:
 
 [NOMBRE EMPRESA]: ${data.nombre_empresa}
 [SECTOR]: ${data.sector}
-[DESCRIPCIÓN]: ${data.descripcion_negocio}
+[DESCRIPCIÓN]: ${data.descripcion_negocio} 
 [ANTIGÜEDAD]: ${data.antiguedad_empresa}
 [ROL USUARIO]: ${data.puesto_usuario}
 [NÚMERO EMPLEADOS]: ${data.numero_empleados}
@@ -647,6 +647,7 @@ Al final, entrega la siguiente estructura JSON solo como texto de ejemplo:
 
                     setTimeout(async () => {
                         try {
+                            console.log('Iniciando generación de PDF paginado para móvil');
                             const pdfContent = tempDiv.querySelector('#reportContent');
                             if (!pdfContent) throw new Error('No se encontró el contenido del reporte.');
                             pdfContent.style.maxWidth = PAGE_WIDTH_PX + 'px';
@@ -655,6 +656,7 @@ Al final, entrega la siguiente estructura JSON solo como texto de ejemplo:
 
                             const totalHeight = pdfContent.scrollHeight;
                             const pageCount = Math.ceil(totalHeight / PAGE_HEIGHT_PX);
+                            console.log('Total height:', totalHeight, 'Page count:', pageCount);
 
                             const pdf = new jsPDF({
                                 orientation: 'p',
@@ -663,14 +665,13 @@ Al final, entrega la siguiente estructura JSON solo como texto de ejemplo:
                             });
 
                             for (let i = 0; i < pageCount; i++) {
-                                // Crea un wrapper temporal para cada página
+                                console.log('Generando página', i + 1, 'de', pageCount);
                                 const pageWrapper = document.createElement('div');
                                 pageWrapper.style.width = PAGE_WIDTH_PX + 'px';
                                 pageWrapper.style.height = PAGE_HEIGHT_PX + 'px';
                                 pageWrapper.style.overflow = 'hidden';
                                 pageWrapper.style.position = 'relative';
                                 const pageClone = pdfContent.cloneNode(true);
-                                // Refuerzo: asegurar que todo el contenido sea visible para html2canvas
                                 pageClone.style.display = 'block';
                                 pageClone.style.height = 'auto';
                                 pageClone.style.overflow = 'visible';
@@ -678,12 +679,13 @@ Al final, entrega la siguiente estructura JSON solo como texto de ejemplo:
                                 pageWrapper.appendChild(pageClone);
                                 tempDiv.appendChild(pageWrapper);
 
-                                // Renderiza la página
+                                console.log('Renderizando canvas para página', i + 1);
                                 const canvas = await html2canvas(pageWrapper, {
                                     scale: 1,
                                     useCORS: true,
                                     backgroundColor: '#fff'
                                 });
+                                console.log('Canvas generado para página', i + 1);
 
                                 const imgData = canvas.toDataURL('image/jpeg', 0.95);
                                 const pageWidth = pdf.internal.pageSize.getWidth();
@@ -699,13 +701,13 @@ Al final, entrega la siguiente estructura JSON solo como texto de ejemplo:
 
                             pdf.save('reporte-diagnostico-empresarial.pdf');
                             alert('¡El PDF se ha generado y descargado correctamente!');
-                            // Mostrar el botón de continuar (mondayFormContainer) y ocultar el mensaje de descarga
                             const mondayBlock = document.getElementById('mondayFormContainer');
                             if (mondayBlock) mondayBlock.classList.remove('hidden');
                             const downloadPrompt = document.getElementById('downloadPrompt');
                             if (downloadPrompt) downloadPrompt.classList.add('hidden');
                         } catch (error) {
-                            alert('Ocurrió un error al generar el PDF en móvil.');
+                            alert('Ocurrió un error al generar el PDF en móvil: ' + (error && error.message ? error.message : error));
+                            console.error('Error al generar PDF:', error);
                         } finally {
                             document.body.removeChild(tempDiv);
                             downloadButton.innerText = 'Descargar PDF';
