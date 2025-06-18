@@ -644,8 +644,9 @@ Al final, entrega la siguiente estructura JSON solo como texto de ejemplo:
 
                     setTimeout(async () => {
                         try {
+                            // Cambia el scale a 0.5 para móvil
                             const canvas = await html2canvas(tempDiv, {
-                                scale: 1,
+                                scale: 0.5, // Escala reducida para evitar el error de área máxima
                                 useCORS: true,
                             });
                             const imgData = canvas.toDataURL('image/png');
@@ -681,6 +682,7 @@ Al final, entrega la siguiente estructura JSON solo como texto de ejemplo:
                     printWindow.onload = () => {
                         setTimeout(async () => {
                             try {
+                                // Mantén el scale original (2) para escritorio
                                 const canvas = await html2canvas(printWindow.document.body, {
                                     scale: 2,
                                     useCORS: true,
