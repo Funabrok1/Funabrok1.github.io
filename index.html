@@ -642,29 +642,47 @@ Al final, entrega la siguiente estructura JSON solo como texto de ejemplo:
                     tempDiv.innerHTML = fullHtml;
                     document.body.appendChild(tempDiv);
 
+                    // Ajustar el ancho del contenedor para PDF (A4: 794px a 96dpi)
+                    const pdfContent = tempDiv.querySelector('#reportContent');
+                    if (pdfContent) {
+                        pdfContent.style.maxWidth = '794px';
+                        pdfContent.style.width = '794px';
+                        pdfContent.style.margin = '0 auto';
+                    }
+
                     setTimeout(async () => {
                         try {
-                            // Cambia el scale a 0.5 para móvil
+                            // Usa scale: 1 para que el texto no salga pequeño
                             const canvas = await html2canvas(tempDiv, {
-                                scale: 0.5, // Escala reducida para evitar el error de área máxima
+                                scale: 1,
                                 useCORS: true,
                             });
-                            const imgData = canvas.toDataURL('image/png');
-                            const imgWidth = canvas.width;
-                            const imgHeight = canvas.height;
-                            const pdfWidth = 210; // A4 width in mm
-                            const pdfHeight = (imgHeight * pdfWidth) / imgWidth;
-
+                            const imgData = canvas.toDataURL('image/jpeg', 0.95);
                             const pdf = new jsPDF({
                                 orientation: 'p',
-                                unit: 'mm',
-                                format: [pdfWidth, pdfHeight]
+                                unit: 'pt',
+                                format: 'a4'
                             });
-
-                            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                            const pageWidth = pdf.internal.pageSize.getWidth();
+                            const pageHeight = pdf.internal.pageSize.getHeight();
+                            const imgWidth = pageWidth;
+                            const imgHeight = canvas.height * (imgWidth / canvas.width);
+                            let position = 0;
+                            pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+                            // Si la imagen es más alta que una página, agrega páginas
+                            while (position + imgHeight > pageHeight) {
+                                position -= pageHeight;
+                                pdf.addPage();
+                                pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+                            }
                             pdf.save('reporte-diagnostico-empresarial.pdf');
                             // Mensaje de éxito en móvil
                             alert('¡El PDF se ha generado y descargado correctamente!');
+                            // Mostrar el botón de continuar (mondayFormContainer) y ocultar el mensaje de descarga
+                            const mondayBlock = document.getElementById('mondayFormContainer');
+                            if (mondayBlock) mondayBlock.classList.remove('hidden');
+                            const downloadPrompt = document.getElementById('downloadPrompt');
+                            if (downloadPrompt) downloadPrompt.classList.add('hidden');
                         } catch (error) {
                             alert("Ocurrió un error al generar el PDF en móvil.");
                         } finally {
