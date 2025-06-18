@@ -648,11 +648,10 @@ Al final, entrega la siguiente estructura JSON solo como texto de ejemplo:
                     setTimeout(async () => {
                         try {
                             console.log('Iniciando generación de PDF paginado para móvil');
-                            const pdfContent = tempDiv.querySelector('#reportContent');
-                            if (!pdfContent) throw new Error('No se encontró el contenido del reporte.');
-                            pdfContent.style.maxWidth = PAGE_WIDTH_PX + 'px';
-                            pdfContent.style.width = PAGE_WIDTH_PX + 'px';
-                            pdfContent.style.margin = '0 auto';
+                            const originalReportContent = document.getElementById('reportContent');
+                            if (!originalReportContent) throw new Error('No se encontró el contenido del reporte original.');
+                            const pdfContent = originalReportContent.cloneNode(true);
+                            pdfContent.classList.remove('hidden'); // Asegura que no esté oculto
 
                             const totalHeight = pdfContent.scrollHeight;
                             const pageCount = Math.ceil(totalHeight / PAGE_HEIGHT_PX);
