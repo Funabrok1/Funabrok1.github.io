@@ -246,9 +246,23 @@
                         <p class="text-sm text-gray-600">Para solicitar asesoría, primero debe descargar el reporte en PDF.</p>
                     </div>
                     <div id="mondayFormContainer" class="text-center hidden mt-4">
-                         <h4 class="text-lg font-semibold mb-2">Solicitud de Asesoría</h4>
-                         <p class="text-sm text-gray-600 mb-4">¡Excelente! Ahora puede contactar a un asesor.</p>
-                         <a href="https://forms.monday.com/forms/ca72b435abc536283ccfc0a2a5504466?r=use1" target="_blank" class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg text-center transition-colors">Contactar a un Asesor</a>
+                        <h4 class="text-lg font-semibold mb-2">Solicitud de Asesoría</h4>
+                        <p class="text-sm text-gray-600 mb-4">¡Excelente! Ahora puede contactar a un asesor.</p>
+                        
+                        <!-- Instrucciones para guardar el PDF -->
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4 text-left max-w-xl mx-auto">
+                            <h5 class="font-semibold mb-2 text-blue-900">¿Cómo guardar tu PDF en Archivos?</h5>
+                            <ol class="list-decimal ml-6 text-sm text-gray-700 space-y-1">
+                                <li>Presiona el botón <strong>Descargar PDF</strong> de arriba.</li>
+                                <li>Cuando se abra el PDF, toca el icono de <strong>compartir</strong> (<span style="font-size:1.2em;">&#x1f4e4;</span> o <span style="font-size:1.2em;">&#x2193;</span>).</li>
+                                <li>Selecciona <strong>Guardar en Archivos</strong>.</li>
+                                <li>Elige la carpeta donde quieres guardar el archivo y confirma.</li>
+                            </ol>
+                            <p class="mt-2 text-xs text-gray-500">Así podrás consultar tu reporte cuando lo necesites o enviarlo por correo.</p>
+                        </div>
+
+                        <a href="https://forms.monday.com/forms/ca72b435abc536283ccfc0a2a5504466?r=use1" target="_blank" class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg text-center transition-colors">Contactar a un Asesor</a>
+                        <button id="volverBtn" class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg text-center transition-colors">Volver al reporte</button>
                     </div>
                 </div>
                 <div id="errorState" class="text-center py-10 hidden"><p class="text-red-600">Lo sentimos, ha ocurrido un error al generar el reporte.</p></div>
@@ -927,6 +941,14 @@ Al final, entrega la siguiente estructura JSON solo como texto de ejemplo:
             });
 
             showStep(currentStep);
+
+            // Asegúrate de que el botón exista antes de agregar el listener
+            document.body.addEventListener('click', function(e) {
+                if (e.target && e.target.id === 'volverBtn') {
+                    mondayFormContainer.classList.add('hidden');
+                    if (reportContent) reportContent.classList.remove('hidden');
+                }
+            });
         });
     </script>
 </body>
